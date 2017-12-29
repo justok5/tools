@@ -37,6 +37,10 @@ git reset --hard HEAD^^     #回滚2次已commit但未push的状态
 git reset --hard HEAD~n     #回滚n次已commit但未push的状态
 git reset --hard SHA1       #回滚到某个状态,用SHA1(用git status 命令查看)的前几个字母标示
 
-
+git branch -b hotfix        #创建hotfix分支
+git checkout hotfix         #HEAD切换到hotfix分支
+git checkout master         #切换回master分支
+git merge hotfix            #合并hotfix分支
+git branch -d hotfix        #删除hotfix分支
 
 
