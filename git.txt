@@ -1,5 +1,5 @@
 Git 简介
-                        clone/pull 
+                   clone/checkout/fetch 
      ┌----------------------------------------------┐     
      v     add        commit                push    |
 workspace ----> stage ----> Branch(Master) ------> Branch(Master)
@@ -45,6 +45,11 @@ git checkout master             #切换回master分支
 git merge test                  #合并test分支
 git branch -d test              #删除test分支
 
+git branch -v                   #查看每个分支的最后提交
+git branch --merged             #查看已合并的分支
+git branch --no-merged          #查看未合并的分支
+git branch -D test              #强制删除未合并的分支
+  
 git push origin test             #推送到远程test分支
 git checkout -b test origin/test #从远程下载test分支并切换之
 git push origin --delete test    #删除远程test分支
