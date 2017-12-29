@@ -5,3 +5,38 @@ Git 简介
 workspace ----> stage ----> Branch(Master) ------> Branch(Master)
 工作区          暂存区       分支                  远程分支
                 └--版本库(Repository)--┘           远程版本库
+
+				
+到 github.com 注册新用户
+
+git config --global user.name "YOURNAME"               #添加用户
+git config --global user.email "YOUREMAIL@MAIL.COM"    #添加邮件
+
+git remote add origin https://github.com/justok5/tools #添加远程库,使用https
+或 git remote add origin git@github.com:justok5/tools  #添加远程库,使用SSH
+
+git remote remove origin                               #删除远程库
+git remote rename origin origin_bak                    #重命名远程库
+
+git clone https://github.com/justok5/tools             #从远程仓库下载,使用https
+或 git clone git@github.com:justok5/tools              #从远程仓库下载,使用SSH
+
+git add FILE1 [,FILE2...]	#添加文件到暂存区
+git rm FILE1 [,FILE2...]	#从暂存区删除文件
+git commit -m "注释"        #提交到本地Repo
+git push origin master      #推送到远程Repo
+
+git status                  #查看状态
+git log                     #查看日志
+
+git reset HEAD FILE         #删除已add但未commit的文件FILE
+git checkout -- FILE        #从远程仓库下载文件FILE
+
+git reset --hard HEAD^      #回滚1次已commit但未push的状态
+git reset --hard HEAD^^     #回滚2次已commit但未push的状态
+git reset --hard HEAD~n     #回滚n次已commit但未push的状态
+git reset --hard SHA1       #回滚到某个状态,用SHA1(用git status 命令查看)的前几个字母标示
+
+
+
+
