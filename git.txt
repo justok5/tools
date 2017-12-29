@@ -1,0 +1,7 @@
+Git 简介
+                        clone/pull 
+     ┌----------------------------------------------┐     
+     v     add        commit                push    |
+workspace ----> stage ----> Branch(Master) ------> Branch(Master)
+工作区          暂存区       分支                  远程分支
+                └--版本库(Repository)--┘           远程版本库
