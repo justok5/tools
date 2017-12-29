@@ -7,7 +7,7 @@ workspace ----> stage ----> Branch(Master) ------> Branch(Master)
                 └--版本库(Repository)--┘           远程版本库
 
 				
-到 github.com 注册新用户
+在 github.com 注册新用户
 
 git config --global user.name "YOURNAME"               #添加用户
 git config --global user.email "YOUREMAIL@MAIL.COM"    #添加邮件
@@ -23,24 +23,28 @@ git clone https://github.com/justok5/tools             #从远程仓库下载,�
 
 git add FILE1 [,FILE2...]	#添加文件到暂存区
 git rm FILE1 [,FILE2...]	#从暂存区删除文件
-git commit -m "注释"        #提交到本地Repo
-git push origin master      #推送到远程Repo
+git commit -m "注释"            #提交到本地Repo
+git push origin master          #推送到远程Repo
 
-git status                  #查看状态
-git log                     #查看日志
+git status                      #查看状态
+git log                         #查看日志
 
-git reset HEAD FILE         #删除已add但未commit的文件FILE
-git checkout -- FILE        #从远程仓库下载文件FILE
+git reset HEAD FILE             #删除已add但未commit的文件FILE
+git checkout -- FILE            #从远程仓库下载文件FILE
 
-git reset --hard HEAD^      #回滚1次已commit但未push的状态
-git reset --hard HEAD^^     #回滚2次已commit但未push的状态
-git reset --hard HEAD~n     #回滚n次已commit但未push的状态
-git reset --hard SHA1       #回滚到某个状态,用SHA1(用git status 命令查看)的前几个字母标示
+git reset --hard HEAD^          #回滚1次已commit但未push的状态
+git reset --hard HEAD^^         #回滚2次已commit但未push的状态
+git reset --hard HEAD~n         #回滚n次已commit但未push的状态
+git reset --hard SHA1           #回滚到某个状态,用SHA1(用git status 命令查看)的前几个字母标示
 
-git branch -b hotfix        #创建hotfix分支
-git checkout hotfix         #HEAD切换到hotfix分支
-git checkout master         #切换回master分支
-git merge hotfix            #合并hotfix分支
-git branch -d hotfix        #删除hotfix分支
+git fetch origin                #更新本地数据库(如果有别的用户更新了远程仓库)
 
+git branch -b test              #创建test分支
+git checkout test               #HEAD切换到test分支
+git checkout master             #切换回master分支
+git merge test                  #合并test分支
+git branch -d test              #删除test分支
 
+git push origin test             #推送到远程test分支
+git checkout -b test origin/test #从远程下载test分支并切换之
+git push origin --delete test    #删除远程test分支
