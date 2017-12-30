@@ -1,16 +1,27 @@
-Git 简介
-                   clone/checkout/fetch 
-     ┌----------------------------------------------┐     
-     v     add        commit                push    |
-workspace ----> stage ----> Branch(Master) ------> Branch(Master)
-工作区          暂存区       分支                  远程分支
-                └--版本库(Repository)--┘           远程版本库
+========  Git 简介  =========
 
-				
+
+=== git 模型 ===
+
+                      clone/fetch/pull 
+    ┌--------------------------------------------------┐     
+    |             checkout                   ||        |   
+    ├---------------------------------┐      ||        |
+    v      add        commit          |     push       ^
+workspace ----> stage ----> Branch(Master) ------> Branch(Master)
+工作区          暂存区       分支            ||     远程分支
+                └--版本库(Repository)--┘     ||     远程版本库
+    └----------------------------------┘	 ||   └-------------┘
+                   LOCAL                              REMOTE
+	
+
 在 github.com 注册新用户
 
-git config --global user.name "YOURNAME"               #添加用户
-git config --global user.email "YOUREMAIL@MAIL.COM"    #添加邮件
+=== git 常用命令 ===
+
+git config --global user.name 'YOURNAME'               #添加用户
+git config --global user.email 'YOUREMAIL@MAIL.COM'    #添加邮件
+git config --global alias.unstage 'reset HEAD --'      #定义别名 git unstage FILE
 
 git remote add origin https://github.com/justok5/tools #添加远程库,使用https
 或 git remote add origin git@github.com:justok5/tools  #添加远程库,使用SSH
@@ -18,26 +29,28 @@ git remote add origin https://github.com/justok5/tools #添加远程库,使用ht
 git remote remove origin                               #删除远程库
 git remote rename origin origin_bak                    #重命名远程库
 
-git clone https://github.com/justok5/tools             #从远程仓库下载,使用https
-或 git clone git@github.com:justok5/tools              #从远程仓库下载,使用SSH
+git clone https://github.com/justok5/tools             #从远程仓库克隆到本地新目录,使用https
+git clone ssh://git@github.com/justok5/tools           #从远程仓库克隆到本地新目录,使用SSH
+或 git clone git@github.com:justok5/tools              #SSH简写
 
-git add FILE1 [,FILE2...]	#添加文件到暂存区
-git rm FILE1 [,FILE2...]	#从暂存区删除文件
+git fetch origin                #拷贝所有远程分支
+git pull                        #合并远程的master分支(fast-forward)
+
+git add FILE1 [,FILE2...]	    #添加文件到暂存区
+git rm FILE1 [,FILE2...]	    #从暂存区删除文件
 git commit -m "注释"            #提交到本地Repo
 git push origin master          #推送到远程Repo
 
 git status                      #查看状态
 git log                         #查看日志
 
-git reset HEAD FILE             #删除已add但未commit的文件FILE
-git checkout -- FILE            #从远程仓库下载文件FILE
+git reset HEAD -- FILE          #删除已add但未commit的文件FILE
+git checkout -- FILE            #从本地仓库恢复文件FILE
 
 git reset --hard HEAD^          #回滚1次已commit但未push的状态
 git reset --hard HEAD^^         #回滚2次已commit但未push的状态
 git reset --hard HEAD~n         #回滚n次已commit但未push的状态
 git reset --hard SHA1           #回滚到某个状态,用SHA1(用git status 命令查看)的前几个字母标示
-
-git fetch origin                #更新本地数据库(如果有别的用户更新了远程仓库)
 
 git branch -b test              #创建test分支
 git checkout test               #HEAD切换到test分支
@@ -46,10 +59,18 @@ git merge test                  #合并test分支
 git branch -d test              #删除test分支
 
 git branch -v                   #查看每个分支的最后提交
-git branch --merged             #查看已合并的分支
+git branch -vv                  #查看所有的跟踪分支
+git branch --merged             #查看已合并的分支(已推送用合并 未推送用变基)
 git branch --no-merged          #查看未合并的分支
 git branch -D test              #强制删除未合并的分支
   
 git push origin test             #推送到远程test分支
 git checkout -b test origin/test #从远程下载test分支并切换之
 git push origin --delete test    #删除远程test分支
+
+git tag -a 'TAG' [SHA1]         #打标签 指定SHA1可以给已提交的打标签
+git tag -l 'v1.6*'              #列出以v1.6开头的标签
+
+git rebase master               #变基(与合并类似).只在未推送前变基
+
+
