@@ -5,13 +5,13 @@
 
                       clone/fetch/pull 
     ┌--------------------------------------------------┐     
-    |             checkout                   ||        |   
-    ├---------------------------------┐      ||        |
-    v      add        commit          |     push       ^
+    |             checkout                             |   
+    ├---------------------------------┐                |
+    v      add        commit          |     push       |
 workspace ----> stage ----> Branch(Master) ------> Branch(Master)
-工作区          暂存区       分支            ||     远程分支
-                └--版本库(Repository)--┘     ||     远程版本库
-    └----------------------------------┘	 ||   └-------------┘
+工作区          暂存区       分支                   远程分支
+                └--版本库(Repository)--┘            远程版本库
+    └----------------------------------┘	      └-------------┘
                    LOCAL                              REMOTE
 	
 
@@ -43,6 +43,7 @@ git push origin master          #推送到远程Repo
 
 git status                      #查看状态
 git log                         #查看日志
+git reflog                      #查看引用日志
 
 git reset HEAD -- FILE          #删除已add但未commit的文件FILE
 git checkout -- FILE            #从本地仓库恢复文件FILE
