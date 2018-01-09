@@ -1,0 +1,296 @@
+<html><body>
+<p>ArchLinux 的安装经历 (2017-05-19 19:34:37)	</p>
+		<p>首先，有几个关键点要说明：</p>
+<p>Archlinux
+安装是相对困难的，需要有一定的耐心、以及良好的变通能力。整个安装过程按照官方手册，分成诸多步骤，需要沉下心来按部就班来进行。手册总体来说还是不错的，文章里有大量的链接跳转，有些是相关的背景知识，有些是按照不同需求解释相应的实现方式。一般来说，如果你没有那些要求，则可以跳过相应的内容。另外，整个安装过程很漫长，各个细节都由你做主，不会象windows那样点几下鼠标，重启几遍就完事。好处嘛，就是你完全掌握往你的机器里装什么程序，而不是一股脑打包的操作系统。同时，也因为步骤繁多，期间难免会有疏漏和错误发生，毕竟大量的敲命令行还是容易出错的。这就需要你有甄别变通能力，出错了怎么办，首先看错误信息，多数情况能找到原因。找不到原因咋办？也许要换个思路、换种方式来实现。暂时解决不了问题，如果不影响后续操作，那么我们也可以先放一放，之后再慢慢找答案。</p>
+<p><br></p>
+<p>还有一个，Archlinux
+以滚动升级著称，所以无论安装还是查阅配置手册，你都需要随时连网。而且安装时下载内容较多，网速还不能太慢。这是一点，另外很重要的一点，要找国内的开源镜像做
+mirrorlist ，否则默认是从国外下载会是龟速。国内较快的有 <a href="http://mirrors.163.com/archlinux/iso/latest/" target="_blank">网易</a>、<a href="http://mirrors.sohu.com/archlinux/iso/latest/" target="_blank">搜狐</a>、以及各大院校的教育网。搜索“开源镜像”即可得到。</p>
+<p><br></p>
+<p>听了前面的介绍，再来点小准备，让我们开始安装
+archlinux。如果不是在虚拟机里安装arch，那么最好准备两台电脑，一台安装arch，另一台在线查阅手册，两台电脑都必须连上internet。当然手机/平板也可以替代后者来查阅手册，不过需同时打开多个页面时，还是电脑方便啊。本文也不打算详述安装步骤，也不会对各种名词做过多解释，有兴趣的请查阅<a href="https://wiki.archlinux.org/" target="_blank">wiki</a>。我只将需要谨慎的、关键的、或者容易出错的地方写出来，又或者手册上不需要关注的、与实际操作有出入的。另外也会简单描述本人出过的错，以及补救方法。</p>
+<p><br></p>
+<p><font style="FonT-siZe: 18px" color="#787878"><strong><em>准备工作</em></strong></font></p>
+<p><font style="FonT-siZe: 16px"><em>1.准备 archlinux
+启动文件</em></font></p>
+<p>从开源镜像下载最新的 iso 文档，名称类似 <font color="#ED1C24">archlinux-2017.05.01-x86_64.iso</font></p>
+<p>&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 16px"><em>2.制作启动盘</em></font></p>
+<p>
+将之刻光盘或烧录到U盘，然后接上电脑。开机会以root启动进入archlinux，只是在内存运行arch，并没有安装到硬盘上。这时第二台电脑就应该上场了，打开
+<a href="https://wiki.archlinux.org/index.php/Installation_guide_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)" target="_blank">安装指南</a>，有简体中文版，还不错呢。从<a href="https://wiki.archlinux.org/index.php/Installation_guide_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#.E8.BF.9E.E6.8E.A5.E5.88.B0.E5.9B.A0.E7.89.B9.E7.BD.91" target="_blank">1.3连接到因特网</a>开始吧。假设网卡驱动都正常运行，有线网可以上网了，无线网需要运行下面命令：</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># ip link set <font color="#ED1C24">WLAN</font> up</p>
+<p># wpa_supplicant -B -i <font color="#ED1C24">WLAN</font> -c
+&lt;(wpa_passphrase <font color="#ED1C24">SSID KEY</font>)</p>
+<p># dhcpcd <font color="#ED1C24">WLAN</font></p>
+</div>
+<p>其中 WLAN 是无线网卡名称（用ip link 命令查看，类似
+"wlp7s0"），而SSID是wifi名称，KEY是密码；</p>
+<p>第二条命令是获取IP。</p>
+<p>ps：如果是隐藏的SSID，那么需要添加一步，即用 wpa_passphrase 命令生成的文件要添加一行
+scan_ssid=1<br></p>
+<p><br></p>
+<p><font style="FonT-siZe: 16px"><em>3.硬盘分区</em></font></p>
+<p>用 cfdisk
+命令给硬盘分区，更直观些。如果没有特殊要求，只需分一个区，全部磁盘容量都挂到根目录/。手册中的UEFI可以不理会，而swap文件以后有需要再建。然后格式化分区为ext4格式，并且挂载它。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># mkfs.ext4 /dev/sda1</p>
+<p># mount /dev/sda1 /mnt</p>
+</div>
+<p><br></p>
+<p><font style="FonT-siZe: 16px"><em>4.选择合适的开源镜像</em></font></p>
+<p>这一步挺重要，弄不好会耽误很多时间。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># vi /etc/pacman.d/mirrorlist&nbsp;<wbr></p>
+</div>
+<p>按照原文件格式，把国内开源镜像地址添加到第一位，至于选择哪个网址，首先考虑地理距离最近的。下面例子是网易的：</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p>Server = http://mirrors.163.com/archlinux/$repo/os/$arch</p>
+</div>
+<p>添加保存后，测试一下速度。如果太慢，建议另选一个，否则下载太耗时。</p>
+<p><font style="FonT-siZe: 16px">&nbsp;<wbr><font color="#990030">---------------------------------- 分界线
+----------------------------------</font></font></p>
+<p>&nbsp;<wbr></p>
+<p><strong><font style="FonT-siZe: 18px" color="#787878"><em>开始安装
+Archlinux</em></font></strong></p>
+<p><font style="FonT-siZe: 16px"><em>1.安装基本系统</em></font></p>
+<p>现在开始安装系统基本组件了，第二条命令生成文件系统表。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># pacstrap /mnt base base-devel</p>
+<p># genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</p>
+</div>
+<p><br></p>
+<p><font style="FonT-siZe: 16px"><em>2.切换Archlinux</em></font></p>
+<p>至此，我们都还是在运行在内存里的arch，现在切换到硬盘的arch里。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># arch-chroot /mnt</p>
+</div>
+<p><br></p>
+<p><font style="FonT-siZe: 16px"><em>3.若干小设置</em></font></p>
+<p>接下来设置时区，否则会显示国际标准时间，与北京时间相差8小时。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<p># hwclock --systohc --utc</p>
+<p># date</p>
+</div>
+<p>最后一条命令显示当前时间，如果不正确，请检查前两条命令。</p>
+<p>&nbsp;<wbr></p>
+<p>设置本地化文本，包括地域、货币、时间格式等内容</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># vi /etc/locale.gen</p>
+</div>
+<p>去掉以下三行开头的注释符(#)</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p>en_US.UTF-8 UTF-8<br>
+zh_CN.UTF-8 UTF-8<br>
+zh_TW.UTF-8 UTF-8</p>
+</div>
+<p>保存退出，并执行以下命令</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># locale-gen</p>
+<p># echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</p>
+</div>
+<p>以上步骤不能立刻看到效果，但是是必须的。</p>
+<p>&nbsp;<wbr></p>
+<p>设置主机名</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># echo archlinux &gt; /etc/hostname</p>
+</div>
+<p>设置root密码</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># passwd</p>
+</div>
+<p>那个hosts文件可以不做修改。</p>
+<p>&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 16px"><em>4.GRUB 引导程序</em></font></p>
+<p>接下来也是重要一步，安装引导程序grub，否则安装好的 arch 不会启动。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># pacman -S grub</p>
+<p># grub-install --target=i386-pc /dev/sda<br>
+# grub-mkconfig -o /boot/grub/grub.cfg</p>
+</div>
+<p>至此，你的 archlinux 以及初步安装完毕，可以启动了。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># exit</p>
+<p># reboot</p>
+</div>
+<p>&nbsp;<wbr></p>
+<p>系统会重启选择第二项“Boot existing
+OS”，或者取出光盘/拔下U盘，系统会进入grub，等待5秒进入ArchLinux，也可以直接回车。提示输入用户 root
+，密码是刚才你修改的。</p>
+<p>在这里多说一句，如果想修改grub设置，请编辑 /etc/default/grub 文档，比如设置
+GRUB_TIMEOUT=0，把GRUB_HIDDEN_TIMEOUT=0
+并去掉注释，要想修改后的grub配置生效，执行以下命令:</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># grub-mkconfig -o /etc/grub/grub.cfg</p>
+</div>
+<p>正常情况下不要直接修改 grub.cfg 文档，而是修改 grub 并执行 grub-mkconfig
+命令来生成，避免错误。</p>
+<p><br></p>
+<p>ps：如果是用无线上网，那么需要安装 wpa_supplicant 软件包，否则重启后无法联网。<br></p>
+<p>&nbsp;<wbr><font style="font-size: 16px;" color="#990030">---------------------------------- 分界线
+----------------------------------</font></p>
+<p>&nbsp;<wbr></p>
+<p><strong><font style="FonT-siZe: 18px" color="#787878"><em>安装图形界面</em></font></strong></p>
+<p>命令行是不太遭人待见，要想方便使用，我们要安装图形界面Xorg。而X只是底层接口，要实现它还需安装上层显示管理器，我分别安装了
+Gnome 和 LXDE 桌面环境，前者配置简单但稍显臃肿，后者需要更多配置但速度快。以下我会分别说明。</p>
+<p>&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 16px"><em>1.安装 Xorg
+和显卡驱动</em></font></p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># pacman -S xorg-server xorg-xinit xf86-video-vesa</p>
+</div>
+<p>如果你是ATI/Intel/Nvidia 的显卡，则需要额外的安装
+xf86-video-ati/xf86-video-intel/xf86-video-nouveau 的显卡驱动包。</p>
+<p>&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 16px"><em>2.安装桌面管理器</em></font></p>
+<p>X默认使用twm窗口管理器，twm非常丑陋，几乎没有实用价值，所以我们接着安装Gnome/LXDE</p>
+<p>（1）安装Gnome</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># pacman -S gnome gnome-extra</p>
+<p># systemctl enable gdm</p>
+<p># reboot</p>
+</div>
+<p>重启会进入Gnome界面</p>
+<p>（2）安装LXDE，再说一遍，Gnome和LXDE二选一即可。选择LXDE的话，先把gdm取消（命令是：systemctl
+disable gdm，反之亦然）</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># pacman -S&nbsp;<wbr>lxde</p>
+<p># systemctl enable lxdm.service</p>
+<p># cp /etc/X11/xinit/xserverrc ~/.xserverrc</p>
+</div>
+<p>并修改 ~/.xserverrc 的内容为</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p>#!/bin/sh<br>
+exec /usr/bin/Xorg -nolisten tcp "$@" vt$XDG_VTNR</p>
+</div>
+<p>&nbsp;<wbr></p>
+<p>修改 LXDM 默认行为，具体在 /etc/lxdm/lxdm.conf</p>
+<p>比如:</p>
+<p>
+autologin=root&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；以 root 为默认登录LXDM用户，不需要输入密码。</p>
+<p>
+numlock=1&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；启动桌面时打开NumLock</p>
+<p>
+session=/usr/bin/startlxde&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；如果想以Gnome启动，则修改为 /usr/bin/gnome-session。</p>
+<p>重启会进入LXDE界面</p>
+<p>&nbsp;<wbr></p>
+<p>事实上，在Gnome和LXDE之上，分别有GDM和LXDM管理器，也就是这样的关系</p>
+<p>Xorg -&gt; GDM -&gt; Gnome 或者</p>
+<p>Xorg -&gt; LXDM -&gt; LXDE，虽然也可以通过设置实现</p>
+<p>Xorg -&gt; LXDM -&gt; Gnome，只不过恐怕没人这么做。具体请看 <a href="https://wiki.archlinux.org/index.php/LXDM_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)" target="_blank">LXDM</a>。</p>
+<p>&nbsp;<wbr></p>
+<p>注意：LXDM 不会引用 ~/.xinitrc ，但会引用 ~/.xprofile。虽然到目前为止，我们还没碰到
+.xinitrc 下面很快会讲到。这个文件用于配置桌面环境。</p>
+<p>&nbsp;<wbr></p>
+<p><em><font style="FonT-siZe: 16px">（3）设置声卡</font></em></p>
+<p>显卡驱动之前已经简单提过，这里也稍微提一下声卡驱动的设置。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black"># pacman -S
+alsa-utils&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；安装 alsa 声卡实用程序
+<p>#
+alsamixer&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；该工具修改混音通道音量，Master 通道默认是静音，需手动开启。</p>
+<p># speaker-test -c
+2&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；该工具测试声音是否正常，如有“沙沙”的白噪音表示正常。</p>
+<p>
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；参数 "-c 2" 指2声道，3&nbsp;<wbr>代表 2.1声道，6 代表 5.1声道。</p>
+</div>
+<p>&nbsp;<wbr></p>
+<p>到这里，archlinux 的桌面环境已经建立好了，离大功告成仅一步之遥。</p>
+<p><font style="font-size: 16px;" color="#990030">---------------------------------- 分界线
+----------------------------------</font></p>
+<p>&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 18px" color="#787878"><strong><em>设置中文桌面以及输入法</em></strong></font></p>
+<p><font style="FonT-siZe: 16px"><em>1.下载中文字体</em></font></p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># pacman -S
+wqy-zenhei&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+；下载文泉驿正黑字体</p>
+</div>
+<p>其它字体自行查阅，例如命令： pacman -S -l | grep wqy&nbsp;<wbr>
+查询文泉驿所有字体</p>
+<p>&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 16px"><em>2.设置中文界面</em></font></p>
+<p>还记得前面修改过的 /etc/locale.gen 吧，我们启用了 en_US、zh_CN 和 zh_TW 三种语言。</p>
+<p>这里要分情况：</p>
+<p>（1）如果是Gnome桌面，新建文件 ~/.xinitrc 。你也可以进入Gnome里面修改系统语言为中文。</p>
+<p>（2）如果是LXDE桌面，新建文件 ~/.xprofile ，原因上面说过了，LXDM 不引用 .xinitrc</p>
+<p>无论哪个文件，均是输入以下相同内容：</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">export
+LANG=zh_CN.UTF-8<br>
+export LANGUAGE=zh_CN:en_US<br>
+export LC_CTYPE=en_US.UTF-8</div>
+<p>重启后，桌面就变成中文啦。</p>
+<p>&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 16px"><em>3.输入法的安装和设置</em></font></p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p># pacman -S fcitx fcitx-im fcitx-sunpinyin fcitx-configtool</p>
+</div>
+<p>在 fcitx 设置里，添加 sunpinyin 输入法。正常的话，按 Ctrl+Space 切换输入法。</p>
+<p>&nbsp;<wbr></p>
+<p><font style="font-size: 16px;" color="#990030">----------------------------------&nbsp;<wbr>完成
+----------------------------------</font></p>
+<p>到现在为止，archlinx
+系统基本上能用了。如果说还缺什么，合适的浏览器、文字处理软件、音视频播放器、图像处理软件、翻译软件等等。在arch安装这些软件跟在其它的
+linux 发行版类似，就不在这里占用篇幅了。</p>
+<p>&nbsp;<wbr></p>
+<p>至于使用中遇到的小问题，以后慢慢再说吧。</p>
+<p><br>
+&nbsp;<wbr></p>
+<p><font style="FonT-siZe: 18px" color="#787878"><em><strong>编外故事：</strong></em></font></p>
+<p>安装 LXDE 时，遇到过无限重启 lxde 桌面的情况，表现为一直在登录状态不停闪烁。</p>
+<p>后来认识到是 LXDM 的问题。开始并不太了解 LXDE 与 LXDM 之间的关系。所以只装了 lxde 包，并在
+.xinitrc 最后设置了 exec lxde，&nbsp;<wbr>通过 startx 来启动桌面。后来又装了
+LXDM，并 enable lxdm.service 了，发现没有中文界面，查 wiki 得知 LXDM 忽略了 .xinitrc
+配置。于是把 .xinitrc 直接拷贝到 .xprofile ，并没有删除最后的 exec lxde 命令。导致相互引用，无限启动
+lxde ，引起上述故障。</p>
+<p>原因知道了，怎么解决呢？系统已经无法正常登录了。</p>
+<p>答案是使用Arch启动盘，然后</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p>#&nbsp;<wbr>mount /dev/sda1 /mnt</p>
+<p># arch-chroot /mnt</p>
+</div>
+<p>这样就进入硬盘的 arch 系统，修改 /root/.xprofile ，重启，问题解决。</p>
+<p><br></p>
+<p><br>
+&nbsp;<wbr> <font style="FonT-siZe: 18px" color="#787878"><em><strong>后续问题：</strong></em></font></p>
+<p><font style="font-size: 16px;"><i>1.虚拟机的桌面分辨率调整。</i></font></p>
+<p>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+安装完成后，分辨率最高只有1024x768。需要安装虚拟机增强/扩展功能，如果安装过程出现错误，可能缺少 gcc
+等软件包。具体请查看log。安装完增强功能后，就可以设置分辨率了。</p>
+<p><br></p>
+<p><font style="font-size: 16px;"><i>2.自动登录arch</i></font></p>
+<p>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+按照不同的桌面管理器做不同的设置。</p>
+<p>比如 GDM 修改 /etc/gdm/custom.conf 的 AutomaticLogin=username；</p>
+<p>而LXDM 则修改 /etc/lxdm/lxdm.conf 的 autologin=username。</p>
+<p><br></p>
+<p><font style="font-size: 16px;"><i>3.使用Gnome不能切换中文输入法</i></font></p>
+<p>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr> Gnome
+默认使用 wayland，而 fcitx 无法在在 wayland 环境下使用（<a href="https://wiki.archlinux.org/index.php/Fcitx_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#Gnome_On_Wayland_.E7.94.A8.E6.88.B7.E6.97.A0.E6.B3.95.E4.BD.BF.E7.94.A8_fcitx" target="_blank">参考这里</a>）。解决方法有两个，(1)如果使用了GDM，那么修改
+/etc/gdm/custom.conf 取消 WaylandEnable=false 的注释。(2)如果手动启动startx
+的话，在~/.xinitrc 末尾添加 exec
+gnome-session；如果想登录后自动进入Gnome，需要修改~/.bash_profile，具体<a href="https://wiki.archlinux.org/index.php/Xinitrc_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#.E5.9C.A8.E5.90.AF.E5.8A.A8.E7.9A.84.E6.97.B6.E5.80.99.E8.87.AA.E5.8A.A8.E5.90.AF.E7.94.A8X" target="_blank">参考这里</a>。<br></p>
+<p><br></p>
+<p><i><font style="font-size: 16px;">4.在设置里无法打开网络</font></i></p>
+<p>&nbsp;<wbr> &nbsp;<wbr> 原因是网络服务 NetworkManager
+没有运行。执行以下命令，并重启。</p>
+<div style="CoLor: white; BACKGroUnD-CoLor: black">
+<p>#systemctl enable NetworkManager</p>
+</div>
+<p><i><font style="font-size: 16px;"><br></font></i></p>
+<p><i><font style="font-size: 16px;">5.打开浏览器，提示解锁登陆密钥环</font></i></p>
+<p>&nbsp;<wbr> &nbsp;<wbr> 安装并运行 seahorse，在默认的 Login
+里，右键&gt;更改密码，输入登陆密码，新密码留空即可。</p>
+<p><br></p>							
+		</div>
+</body></html>
