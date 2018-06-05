@@ -120,7 +120,7 @@ a.btn:hover { background: transparent; }</string>
     <string name="sys_favs_hide">1</string>
     <string name="app_home_wallpaper_user"></string>
     <string name="sys_site_nav">7</string>
-    <string name="js_sina.cn">H5DEL('.specSlide2Wrap');H5CSS('div[listener=\'true\'],div[sax-type=\'proxy\'],div[sax-type=\'fullScreen\'],a[class=\'show m_f_a\'],div[class^=\'j_sax\'],div[sax-type^=\'sax_\']{display:none !important;}');</string>
+    <string name="js_sina.cn">H5CSS('.specSlide2Wrap,div[listener=\'true\'],div[sax-type=\'proxy\'],div[sax-type=\'fullScreen\'],a[class=\'show m_f_a\'],div[class^=\'j_sax\'],div[sax-type^=\'sax_\']{display:none !important;}');</string>
     <string name="js_photo.sina.cn">H5CSS('section[sax-type=\'sax_photo\']{display:none !important;}');</string>
     <string name="js_u_m.weibo.cn">H5CSS('.appTips,a.btn{display:none !important;}');</string>
     <string name="js_u_a.xcar.com.cn">H5CSS('.header,.appdown-footer,div[class=\'top2016 top640\'],div[class=\'top2016 top1024\'],div[class=\'bottom2016 bottom640\'],div[class=\'bottom2016 bottom1024\']{display:none !important;}');</string>
