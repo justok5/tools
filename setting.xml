@@ -123,7 +123,7 @@ a.btn:hover { background: transparent; }</string>
     <string name="js_sina.cn">H5DEL('.specSlide2Wrap');H5CSS('div[listener=\'true\'],div[sax-type=\'proxy\'],div[sax-type=\'fullScreen\'],a[class=\'show m_f_a\'],div[class^=\'j_sax\'],div[sax-type^=\'sax_\']{display:none !important;}');</string>
     <string name="js_photo.sina.cn">H5CSS('section[sax-type=\'sax_photo\']{display:none !important;}');</string>
     <string name="js_u_m.weibo.cn">H5CSS('.appTips,a.btn{display:none !important;}');</string>
-    <string name="js_u_a.xcar.com.cn">H5DEL('.header');H5CSS('.appdown-footer,div[class=\'top2016 top640\'],div[class=\'top2016 top1024\'],div[class=\'bottom2016 bottom640\'],div[class=\'bottom2016 bottom1024\']{display:none !important;}');</string>
+    <string name="js_u_a.xcar.com.cn">H5CSS('.header,.appdown-footer,div[class=\'top2016 top640\'],div[class=\'top2016 top1024\'],div[class=\'bottom2016 bottom640\'],div[class=\'bottom2016 bottom1024\']{display:none !important;}');</string>
     <string name="js_u_club.m.autohome.com.cn">H5CSS('#cyq-tip,div#recommendJxWrap,.notice,.fixqbot,.fixissue,.series-img,a[data-tag=\'d_btn\'],section[class=\'bbs-gray-box fn-mt-large\'],div[class^=\'adv\'],section[class^=\'adv\'],section[class^=\'bbs-post-replay adv-promote\'],section[class^=\'post-follow outer-section bbs-post-replay insert-reply \'],iframe[src*=\'vr.autohome.com.cn\']{display:none !important;}');
     H5CSS('section.wrapper>section:first-of-type{display:none !important;}');</string>
     <string name="js_u_m.sohu.com">H5DEL('.apk-banner');H5DEL('#indexCarAd');H5DEL('.text-wrapper');H5CSS('li[class=\'feed-item right-mode\'],div[class^=\'plate plate-bill\']{display:none !important;}');</string>
@@ -138,5 +138,5 @@ a.btn:hover { background: transparent; }</string>
     <string name="js_u_faxian.m.smzdm.com">H5DEL('.foot-banner');</string>
     <string name="js_u_product.m.dangdang.com">H5DEL('a#j_app_download');</string>
     <string name="js_u_g.pconline.com.cn">H5CSS('div[id^=\'ad\']{display:none !important;}');</string>
-    <string name="js_u_m.youku.com">H5DEL('#banner');H5CSS('body{padding-top:0px !important;}'); H5CSS('#TMHYd,div#TMHYd+div,div[data-spm=\'2781352\']{display:none !important;}');</string>
+    <string name="js_u_m.youku.com">H5CSS('body{padding-top:0px !important;}'); H5CSS('#banner,#TMHYd,div#TMHYd+div,div[data-spm=\'2781352\']{display:none !important;}');</string>
 </map>
