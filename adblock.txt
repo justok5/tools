@@ -1,5 +1,5 @@
 ! Title: Dong's rules
 ! Version: 20210804
 
-.footer-banner
-#banner
+smzdm.com##.foot-banner,.footer-banner,.logo-download
+piratebay.sbs##div[style*='max-height:310px']
