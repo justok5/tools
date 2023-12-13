@@ -1,8 +1,5 @@
 alias la='ls -AF'
 alias ll='ls -AFhl'
-alias cd..='cd ..'
-alias cd...='cd ../..'
-alias e='exit'
 alias ffmpeg='ffmpeg -hide_banner'
 
 export TIME_STYLE="+%Y-%m-%d %H:%M"
@@ -24,10 +21,3 @@ export LESS_TERMCAP_ue=$'\E[0m'
 # reset underline 
 export GROFF_NO_SGR=1 
 # for konsole and gnome-terminal
-
-# clear ads in GaoDe & DuoDian
-rm -f  /sdcard/Android/data/com.wm.dmall/cache/splash/*
-rm -f  /sdcard/autonavi/afpSplash/*
-
-#cd /sdcard/Download
-
